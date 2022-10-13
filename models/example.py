@@ -37,13 +37,12 @@ class Net(nn.Module):
 
 
 def verify_save_dir(directory):
-    if os.path.exists(directory):
-        shutil.rmtree(directory)
-    os.makedirs(directory)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
 
 class Model:
-    def __init__(self, name="example", save_dir="../results/example", lr=0.001, batch_size=1000):
+    def __init__(self, name="example", save_dir="../results/", lr=0.001, batch_size=1000):
         self.net = Net()
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.Adam(self.net.parameters(), lr=lr)
@@ -51,10 +50,11 @@ class Model:
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         self.net.to(device=self.device)
 
-        self.name = f"{name}-{str(datetime.datetime.now())}"
-        verify_save_dir(save_dir)
-        self.save_dir = save_dir
-        self.save_name = os.path.join(save_dir, self.name)
+        self.name = name
+        verify_save_dir(os.path.join(save_dir, name))
+
+        self.save_dir = os.path.join(save_dir, name)
+        self.save_name = os.path.join(self.save_dir, f"{self.name}.pth")
         self.lr = lr
         self.batch_size = batch_size
 
@@ -70,6 +70,16 @@ class Model:
         self.optimizer.step()
 
         return loss.item()
+
+    def loss(self, inputs, labels):
+        inputs = inputs.to(self.device)
+        labels = labels.to(self.device)
+        outputs = self.net(inputs)
+        loss = self.criterion(outputs, labels)
+        return loss.item()
+
+    def classify(self, inputs):
+        return self.net(inputs.to(self.device))
 
     def save(self):
         torch.save(self.net.state_dict(), self.save_name)
