@@ -7,8 +7,8 @@ import models.resnet as resnet
 def get_model(name):
     if name == "example":
         return example.Model
-    # elif name == "lenet":
-    #     return lenet.Model
+    elif name == "lenet":
+        return lenet.Model
     elif name == "mlp":
         return mlp.Model
     # elif name == "resnet":
