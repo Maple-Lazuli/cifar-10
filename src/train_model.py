@@ -57,7 +57,7 @@ class Trainer:
 
         save_training_performance(self.model, train_loss, val_loss, all_step_loss)
 
-        model.save()
+        self.model.save()
 
 
 if __name__ == "__main__":

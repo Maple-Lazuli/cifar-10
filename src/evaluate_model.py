@@ -97,7 +97,7 @@ class Evaluator:
                 for pred, true in zip(predicted, targets):
                     confusion_matrix[int(pred), int(true)] += 1
 
-        save_performance(matrix=confusion_matrix, classes=classes, model=model, type=type)
+        save_performance(matrix=confusion_matrix, classes=classes, model=self.model, type=type)
 
 
 if __name__ == "__main__":
