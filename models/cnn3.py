@@ -15,21 +15,19 @@ from src.load_data import Loader
 class Net(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(3, 6, 2)
+        self.conv1 = nn.Conv2d(3, 32, 2)
         self.pool = nn.MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(6, 16, 2)
-        self.conv3 = nn.Conv2d(16, 32, 2)
-        self.conv4 = nn.Conv2d(32, 128, 2)
-        self.fc1 = nn.Linear(128 * 1 * 1, 288)
-        self.fc2 = nn.Linear(288, 128)
-        self.fc3 = nn.Linear(128, 64)
-        self.fc4 = nn.Linear(64, 10)
+        self.conv2 = nn.Conv2d(32, 64, 2)
+        self.conv3 = nn.Conv2d(64, 128, 2)
+        self.fc1 = nn.Linear(128*3*3, 288)
+        self.fc2 = nn.Linear(288, 288)
+        self.fc3 = nn.Linear(288, 128)
+        self.fc4 = nn.Linear(128, 10)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
         x = self.pool(F.relu(self.conv3(x)))
-        x = self.pool(F.relu(self.conv4(x)))
         x = torch.flatten(x, 1)  # flatten all dimensions except batch
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
